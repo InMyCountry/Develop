@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -15,12 +16,14 @@ namespace RayPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,6 +40,11 @@ namespace RayPI
                     TermsOfService = "None",
                     Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "名称", Email = "11111111@qq.com", Url = "http://www.cnblogs.com/RayWang" }
                 });
+
+                //配置注释内容
+                String basePath1 = AppContext.BaseDirectory;
+                var xmlPath = Path.Combine(basePath1, "RayPI.xml");
+                c.IncludeXmlComments(xmlPath);
             });
             #endregion
         }
